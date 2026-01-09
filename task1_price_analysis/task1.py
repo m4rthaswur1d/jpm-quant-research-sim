@@ -9,6 +9,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
 
 filepath = "task1_price_analysis/Nat_Gas.csv"
 df = pd.read_csv("Nat_Gas.csv")
@@ -64,6 +66,30 @@ def plot_rolling_volatility(df, col_name="vol_12", save_path=None):
     plt.xlabel("Date")
     plt.ylabel("Volatility")
     plt.grid(alpha=0.3)
+
+    if save_path:
+        plt.tight_layout()
+        plt.savefig(save_path, dpi=150)
+
+    plt.show()
+
+def difference_series(series, order=1):
+    diffed = series.copy()
+    for _ in range(order):
+        diffed = diffed.diff()
+    return diffed
+
+def plot_difference_series(series, order=1, save_path=None):
+    diffed = difference_series(df["Prices"], order=1)
+    plt.figure(figsize=(10, 5))
+    plt.plot(df["Dates"], diffed)
+
+    plt.title("Differenced Series")
+    plt.xlabel("Date")
+    plt.ylabel("Differenced Value")
+    plt.grid(alpha=0.3)
+    plt.tight_layout()
+    plt.xticks(rotation=45)
 
     if save_path:
         plt.tight_layout()
